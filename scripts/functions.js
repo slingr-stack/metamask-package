@@ -3,6 +3,7 @@
  ****************************************************/
 
 exports.sendTransaction = function (netId, dataFrom, from) {
+    let response = {};
     sys.logs.info('[metamask] Sending transaction to MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -21,7 +22,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     txHash: callbackData.txHash,
                     originalMessage: originalMessage
                 });
-                return {
+                response = {
                     tx: callbackData.tx,
                     txHash: callbackData.txHash,
                 };
@@ -33,7 +34,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     error: callbackData.error,
                     originalMessage: originalMessage
                 });
-                return {
+                response = {
                     tx: callbackData.tx,
                     error: callbackData.error,
                 };
@@ -45,9 +46,11 @@ exports.sendTransaction = function (netId, dataFrom, from) {
             }
         }
     });
+    return response;
 }
 
 exports.signData = function () {
+    let response = {};
     sys.logs.info('[metamask] Signing data with MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -61,7 +64,7 @@ exports.signData = function () {
                     signedData: callbackData.signedData,
                     originalMessage: originalMessage
                 });
-                return {
+                response = {
                     data: callbackData.data,
                     signedData: callbackData.signedData,
                 };
@@ -73,7 +76,7 @@ exports.signData = function () {
                     error: callbackData.error,
                     originalMessage: originalMessage
                 });
-                return {
+                response = {
                     tx: callbackData.tx,
                     error: callbackData.error,
                 };
@@ -85,9 +88,11 @@ exports.signData = function () {
             }
         }
     });
+    return response;
 }
 
 exports.getConfigMetamask = function () {
+    let response = {};
     sys.logs.info('[metamask] Requesting config from MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -96,7 +101,7 @@ exports.getConfigMetamask = function () {
         callbacks: {
             response: function (originalMessage, callbackData) {
                 sys.logs.info('[metamask] Get config from MetaMask: [' + JSON.stringify(callbackData) + ']');
-                return {
+                response = {
                     netId: callbackData.netId,
                     defaultAccount: callbackData.defaultAccount,
                     accounts: callbackData.accounts
@@ -104,4 +109,5 @@ exports.getConfigMetamask = function () {
             }
         }
     });
+    return response;
 }

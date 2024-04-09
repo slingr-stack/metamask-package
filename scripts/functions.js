@@ -3,7 +3,7 @@
  ****************************************************/
 
 exports.sendTransaction = function (netId, dataFrom, from) {
-    const id = randomString()+"MetaMask-sendTransaction";
+    const id = randomString()+"-MetaMask-sendTransaction";
     sys.logs.info('[metamask] Sending transaction to MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -28,7 +28,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     tx: callbackData.data.tx,
                     txHash: callbackData.data.txHash,
                 };
-                sys.storage.put(response.id +'MetaMask-sendTransaction', response);
+                sys.storage.put(response.id, response);
             },
             declined: function (originalMessage, callbackData) {
                 sys.logs.warn('[metamask] Send transaction declined. Transaction tx: ' + callbackData.tx);
@@ -42,7 +42,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     tx: callbackData.data.tx,
                     error: callbackData.data.error,
                 };
-                sys.storage.put(response.id +'MetaMask-sendTransaction', response);
+                sys.storage.put(response.id, response);
             },
             error: function (originalMessage, callbackData) {
                 sys.logs.error('[metamask] Fail callback with message: ['+callbackData.error+'] and code: ['+callbackData.errorCode + ']');
@@ -55,7 +55,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
 }
 
 exports.signData = function () {
-    const id = randomString()+"MetaMask-signData";
+    const id = randomString()+"-MetaMask-signData";
     sys.logs.info('[metamask] Signing data with MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -75,7 +75,7 @@ exports.signData = function () {
                     data: callbackData.data,
                     signedData: callbackData.data.signedData,
                 };
-                sys.storage.put(response.id +'MetaMask-signData', response);
+                sys.storage.put(response.id, response);
             },
             declined: function (originalMessage, callbackData) {
                 sys.logs.warn('[metamask] Sign data declined. Transaction tx: ' + callbackData.tx);
@@ -89,7 +89,7 @@ exports.signData = function () {
                     tx: callbackData.data.tx,
                     error: callbackData.data.error,
                 };
-                sys.storage.put(response.id +'MetaMask-signData', response);
+                sys.storage.put(response.id, response);
             },
             error: function (originalMessage, callbackData) {
                 sys.logs.error('[metamask] Fail callback with message: ['+callbackData.error+'] and code: ['+callbackData.errorCode + ']');
@@ -102,7 +102,7 @@ exports.signData = function () {
 }
 
 exports.getConfigMetamask = function () {
-    const id = randomString()+"MetaMask-getConfigMetamask";
+    const id = randomString()+"-MetaMask-getConfigMetamask";
     sys.logs.info('[metamask] Requesting config from MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -118,7 +118,7 @@ exports.getConfigMetamask = function () {
                     defaultAccount: callbackData.data.defaultAccount,
                     accounts: callbackData.data.accounts
                 };
-                sys.storage.put(response.id +'MetaMask-getConfigMetamask', response, {ttl: 60 * 60 * 1000});
+                sys.storage.put(response.id, response, {ttl: 60 * 60 * 1000});
             }
         }
     });

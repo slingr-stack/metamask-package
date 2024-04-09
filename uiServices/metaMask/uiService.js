@@ -95,6 +95,7 @@ service.processMessage = async function (message) {
                         errorCode: 'invalidNetwork',
                         error: 'Network ID [' + message.netId + '] did not match with ui service network [' + service.provider.networkVersion + '].'
                     });
+                    console.log('[metamask] Callback called.');
                     return false;
                 }
                 if (message.data.from && accounts && accounts.indexOf(message.data.from.toLowerCase()) === -1) {
@@ -111,6 +112,7 @@ service.processMessage = async function (message) {
                         errorCode: 'invalidAccount',
                         error: 'Account [' + message.data.from + '] is not selected in MetaMask'
                     });
+                    console.log('[metamask] Callback called.');
                     return false;
                 }
                 return true;
@@ -127,12 +129,14 @@ service.processMessage = async function (message) {
                                 tx: message.data,
                                 txHash: transactionHash
                             });
+                            console.log('[metamask] Callback called.');
                         } catch (error) {
                             console.warn('[metamask] Can not send transaction. Tx declined.', error);
                             service.callback(message, 'declined', {
                                 tx: message.data,
                                 error: error.toString()
                             });
+                            console.error('[metamask] Callback called.');
                         }
                     }
                     break;
@@ -148,12 +152,14 @@ service.processMessage = async function (message) {
                                 data: message.data,
                                 signedData: signature
                             });
+                            console.log('[metamask] Callback called.');
                         } catch (error) {
                             console.warn('[metamask] Can not sign transaction.', error);
                             service.callback(message, 'declined', {
                                 tx: message.data,
                                 error: error.toString()
                             });
+                            console.error('[metamask] Callback called.');
                         }
                     }
                     break;
@@ -164,6 +170,7 @@ service.processMessage = async function (message) {
                         defaultAccount: account,
                         accounts: accounts
                     });
+                    console.log('[metamask] Callback called.');
                     break;
                 }
             }

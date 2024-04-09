@@ -2,7 +2,7 @@
  MetaMask
  ****************************************************/
 
-exports.sendTransaction = function (netId, dataFrom, from) {
+exports.sendTransaction = function (netId, dataFrom, from, callback) {
     let response = {};
     sys.logs.info('[metamask] Sending transaction to MetaMask');
     sys.ui.sendMessage({
@@ -26,6 +26,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     tx: callbackData.tx,
                     txHash: callbackData.txHash,
                 };
+                callback(response);
             },
             declined: function (originalMessage, callbackData) {
                 sys.logs.warn('[metamask] Send transaction declined. Transaction tx: ' + callbackData.tx);
@@ -38,6 +39,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     tx: callbackData.tx,
                     error: callbackData.error,
                 };
+                callback(response);
             },
             error: function (originalMessage, callbackData) {
                 sys.logs.error('[metamask] Fail callback with message: ['+callbackData.error+'] and code: ['+callbackData.errorCode + ']');
@@ -46,10 +48,9 @@ exports.sendTransaction = function (netId, dataFrom, from) {
             }
         }
     });
-    return response;
 }
 
-exports.signData = function () {
+exports.signData = function (callback) {
     let response = {};
     sys.logs.info('[metamask] Signing data with MetaMask');
     sys.ui.sendMessage({
@@ -68,6 +69,7 @@ exports.signData = function () {
                     data: callbackData.data,
                     signedData: callbackData.signedData,
                 };
+                callback(response);
             },
             declined: function (originalMessage, callbackData) {
                 sys.logs.warn('[metamask] Sign data declined. Transaction tx: ' + callbackData.tx);
@@ -80,6 +82,7 @@ exports.signData = function () {
                     tx: callbackData.tx,
                     error: callbackData.error,
                 };
+                callback(response);
             },
             error: function (originalMessage, callbackData) {
                 sys.logs.error('[metamask] Fail callback with message: ['+callbackData.error+'] and code: ['+callbackData.errorCode + ']');
@@ -88,10 +91,9 @@ exports.signData = function () {
             }
         }
     });
-    return response;
 }
 
-exports.getConfigMetamask = function () {
+exports.getConfigMetamask = function (callback) {
     let response = {};
     sys.logs.info('[metamask] Requesting config from MetaMask');
     sys.ui.sendMessage({
@@ -106,8 +108,8 @@ exports.getConfigMetamask = function () {
                     defaultAccount: callbackData.defaultAccount,
                     accounts: callbackData.accounts
                 };
+                callback(response);
             }
         }
     });
-    return response;
 }

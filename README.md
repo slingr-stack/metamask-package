@@ -19,6 +19,12 @@
 
 This package allows you to connect your SLINGR application to sign transactions using the MetaMask browser extension.
 
+## QuickStart
+
+```js
+pkg.metamask.functions.getConfigMetamask(function(res) {log(JSON.stringify(res));})
+```
+
 # Javascript API
 
 The Javascript API of the OAuth package has :

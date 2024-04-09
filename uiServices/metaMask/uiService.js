@@ -115,7 +115,7 @@ service.processMessage = async function (message) {
                 }
                 return true;
             };
-            switch (message.name) {
+            switch (message.operation) {
                 case 'sendTransaction': {
                     if (checkErrors(message, accounts)) {
                         try {

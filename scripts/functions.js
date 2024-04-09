@@ -2,8 +2,8 @@
  MetaMask
  ****************************************************/
 
-exports.sendTransaction = function (netId, dataFrom, from, callback) {
-    let response = {};
+exports.sendTransaction = function (netId, dataFrom, from) {
+    let response = {id: uuid()+"MetaMask-sendTransaction"};
     sys.logs.info('[metamask] Sending transaction to MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -26,7 +26,7 @@ exports.sendTransaction = function (netId, dataFrom, from, callback) {
                     tx: callbackData.tx,
                     txHash: callbackData.txHash,
                 };
-                callback(response);
+                sys.storage.put(response.id +'MetaMask-sendTransaction', response);
             },
             declined: function (originalMessage, callbackData) {
                 sys.logs.warn('[metamask] Send transaction declined. Transaction tx: ' + callbackData.tx);
@@ -35,11 +35,11 @@ exports.sendTransaction = function (netId, dataFrom, from, callback) {
                     error: callbackData.error,
                     originalMessage: originalMessage
                 });
-                response = {
+                response.response = {
                     tx: callbackData.tx,
                     error: callbackData.error,
                 };
-                callback(response);
+                sys.storage.put(response.id +'MetaMask-sendTransaction', response);
             },
             error: function (originalMessage, callbackData) {
                 sys.logs.error('[metamask] Fail callback with message: ['+callbackData.error+'] and code: ['+callbackData.errorCode + ']');
@@ -48,10 +48,11 @@ exports.sendTransaction = function (netId, dataFrom, from, callback) {
             }
         }
     });
+    return response;
 }
 
-exports.signData = function (callback) {
-    let response = {};
+exports.signData = function () {
+    let response = {id: uuid()+"MetaMask-signData"};
     sys.logs.info('[metamask] Signing data with MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -69,7 +70,7 @@ exports.signData = function (callback) {
                     data: callbackData.data,
                     signedData: callbackData.signedData,
                 };
-                callback(response);
+                sys.storage.put(response.id +'MetaMask-signData', response);
             },
             declined: function (originalMessage, callbackData) {
                 sys.logs.warn('[metamask] Sign data declined. Transaction tx: ' + callbackData.tx);
@@ -82,7 +83,7 @@ exports.signData = function (callback) {
                     tx: callbackData.tx,
                     error: callbackData.error,
                 };
-                callback(response);
+                sys.storage.put(response.id +'MetaMask-signData', response);
             },
             error: function (originalMessage, callbackData) {
                 sys.logs.error('[metamask] Fail callback with message: ['+callbackData.error+'] and code: ['+callbackData.errorCode + ']');
@@ -91,10 +92,11 @@ exports.signData = function (callback) {
             }
         }
     });
+    return response;
 }
 
-exports.getConfigMetamask = function (callback) {
-    let response = {};
+exports.getConfigMetamask = function () {
+    let response = {id: uuid()+"MetaMask-getConfigMetamask"};
     sys.logs.info('[metamask] Requesting config from MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -108,8 +110,29 @@ exports.getConfigMetamask = function (callback) {
                     defaultAccount: callbackData.defaultAccount,
                     accounts: callbackData.accounts
                 };
-                callback(response);
+                sys.storage.put(response.id +'MetaMask-getConfigMetamask', response, {ttl: 60 * 60 * 1000});
             }
         }
+    });
+    return response;
+}
+
+/****************************************************
+ Private API
+ ****************************************************/
+
+function uuid() {
+    var d = new Date().getTime();//Timestamp
+    var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16;//random number between 0 and 16
+        if (d > 0) {//Use timestamp until depleted
+            r = (d + r) % 16 | 0;
+            d = Math.floor(d / 16);
+        } else {//Use microseconds since page-load if supported
+            r = (d2 + r) % 16 | 0;
+            d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }

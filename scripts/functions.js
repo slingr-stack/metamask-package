@@ -6,7 +6,8 @@ exports.sendTransaction = function (netId, dataFrom, from) {
     sys.logs.info('[metamask] Sending transaction to MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
-        name: 'sendTransaction',
+        name: 'processMessage',
+        operation:  'sendTransaction',
         netId: netId,
         data: {
             from: dataFrom
@@ -50,7 +51,8 @@ exports.signData = function () {
     sys.logs.info('[metamask] Signing data with MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
-        name: 'signData',
+        name: 'processMessage',
+        operation:  'signData',
         callbacks: {
             approved: function (originalMessage, callbackData) {
                 sys.logs.info('[metamask] Sign data approved. Data: ' + callbackData.data);
@@ -89,7 +91,8 @@ exports.getConfigMetamask = function () {
     sys.logs.info('[metamask] Requesting config from MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
-        name: 'getConfigMetamask',
+        name: 'processMessage',
+        operation: 'getConfigMetamask',
         callbacks: {
             response: function (originalMessage, callbackData) {
                 sys.logs.info('[metamask] Get config from MetaMask: [' + JSON.stringify(callbackData) + ']');

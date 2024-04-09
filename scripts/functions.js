@@ -9,6 +9,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
         scope: 'uiService:metamask.metaMask',
         name: 'processMessage',
         operation:  'sendTransaction',
+        idOperation: id,
         netId: netId,
         data: {
             from: dataFrom
@@ -23,7 +24,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     originalMessage: originalMessage
                 });
                 let response = {
-                    id: id,
+                    id: originalMessage.idOperation,
                     tx: callbackData.data.tx,
                     txHash: callbackData.data.txHash,
                 };
@@ -37,7 +38,7 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     originalMessage: originalMessage
                 });
                 let response = {
-                    id: id,
+                    id: originalMessage.idOperation,
                     tx: callbackData.data.tx,
                     error: callbackData.data.error,
                 };
@@ -60,6 +61,7 @@ exports.signData = function () {
         scope: 'uiService:metamask.metaMask',
         name: 'processMessage',
         operation:  'signData',
+        idOperation: id,
         callbacks: {
             approved: function (originalMessage, callbackData) {
                 sys.logs.info('[metamask] Sign data approved. Data: ' + callbackData.data);
@@ -69,7 +71,7 @@ exports.signData = function () {
                     originalMessage: originalMessage
                 });
                 let response = {
-                    id: id,
+                    id: originalMessage.idOperation,
                     data: callbackData.data,
                     signedData: callbackData.data.signedData,
                 };
@@ -83,7 +85,7 @@ exports.signData = function () {
                     originalMessage: originalMessage
                 });
                 let response = {
-                    id: id,
+                    id: originalMessage.idOperation,
                     tx: callbackData.data.tx,
                     error: callbackData.data.error,
                 };
@@ -106,11 +108,12 @@ exports.getConfigMetamask = function () {
         scope: 'uiService:metamask.metaMask',
         name: 'processMessage',
         operation: 'getConfigMetamask',
+        idOperation: id,
         callbacks: {
             response: function (originalMessage, callbackData) {
                 sys.logs.info('[metamask] Get config from MetaMask: [' + JSON.stringify(callbackData) + ']');
                 let response = {
-                    id: id,
+                    id: originalMessage.idOperation,
                     netId: callbackData.data.netId,
                     defaultAccount: callbackData.data.defaultAccount,
                     accounts: callbackData.data.accounts

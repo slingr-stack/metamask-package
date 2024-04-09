@@ -8,211 +8,99 @@
     </thead>
     <tbody>
     <tr>
-        <td>Skeleton package</td>
-        <td>January 3, 2024</td>
-        <td>Detailed description of the API of the Skeleton package.</td>
+        <td>Metamask package</td>
+        <td>April 9, 2024</td>
+        <td>Detailed description of the Metamask UI service.</td>
     </tr>
     </tbody>
 </table>
 
 # Overview
 
+This package allows you to connect your SLINGR application to sign transactions using the MetaMask browser extension.
+
 # Javascript API
 
-The Javascript API of the skeleton package has two pieces:
+The Javascript API of the OAuth package has :
 
-- **HTTP requests**
-- **Flow steps**
+## Shortcuts
 
-## HTTP requests
-You can make `GET`,`PUT`,`PATCH`,`DELETE` requests to the [skeleton API](API_URL_HERE) like this:
-```javascript
-var response = pkg.skeleton.api.get('/path3')
-var response = pkg.skeleton.api.put('/path1/:testPath', body)
-var response = pkg.skeleton.api.put('/path1/:testPath')
-var response = pkg.skeleton.api.patch('/path2?param2=' + httpOptions.query.param2 + '&param3=' + httpOptions.query.param3 + '', body)
-var response = pkg.skeleton.api.patch('/path2?param2=' + httpOptions.query.param2 + '&param3=' + httpOptions.query.param3 + '')
-var response = pkg.skeleton.api.delete('/path4')
-```
-
-Please take a look at the documentation of the [HTTP service](https://github.com/slingr-stack/http-service)
-for more information about generic requests.
-
-## Flow Step
-
-As an alternative option to using scripts, you can make use of Flows and Flow Steps specifically created for the package:
+You can make use of the helpers provided in the package:
 <details>
-    <summary>Click here to see the Flow Steps</summary>
+    <summary>Click here to see all the helpers</summary>
 
 <br>
 
-### Generic Flow Step
+* Send transaction
+```javascript
+pkg.metamask.functions.sendTransaction();
+```
+Sends a transaction to be signed and sent to the network using the MetaMask package. 
+The tx data should be in the `data` field (see eth.sendTransaction for more information), 
+while you can receive two events:
 
-Generic flow step for full use of the entire package and its services.
+* approved: the user approved the transaction, and it was submitted to the network. You should check the status of the transaction to see if it was confirmed. Parameter `msg` contains the original message sent to the package (where you can add more fields if you need them in the callback) while `res` contains the tx object and txHash.
+* declined: the user did not approve the transaction,
+  or there was a problem, and the tx could not be submitted to the network.
+  `msg` contains the original message sent to the plugin, and you could find the error in `res.error`.
+  Additionally, there is an `error` callback for handling accounts or network-related errors.
+  These are the possible error codes:
+  - `invalidAccount`: if the account to sign the transaction is not configured in MetaMask.
+  - `invalidNetwork`: if the network MetaMask is connected to is different from the network requested.
+---
+* Sign data
+```javascript
+pkg.metamask.functions.signData();
+```
+Signs data using the MetaMask package. The data to sign should be in the `data` field while you can pass two callbacks:
 
-<h3>Inputs</h3>
+* approved: the user approved the transaction, and it was signed. You can find the signed data in `res.signedData`.
+* declined: the user did not approve the transaction, or there was a problem signing the data.
+  You can find the error in `res.error`.
+  There are also errors related to the account, and the possible error code is:
+  - `invalidAccount`: if the account to sign the transaction is not configured in MetaMask.
 
-<table>
-    <thead>
-    <tr>
-        <th>Label</th>
-        <th>Type</th>
-        <th>Required</th>
-        <th>Default</th>
-        <th>Visibility</th>
-        <th>Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>URL (Method)</td>
-        <td>choice</td>
-        <td>yes</td>
-        <td> - </td>
-        <td>Always</td>
-        <td>
-            This is the http method to be used against the package. <br>
-            Possible values are: <br>
-            <i><strong>GET,PUT,PATCH,DELETE</strong></i>
-        </td>
-    </tr>
-    <tr>
-        <td>URL (Path)</td>
-        <td>choice</td>
-        <td>yes</td>
-        <td> - </td>
-        <td>Always</td>
-        <td>
-            The url to which this package will send the request. This is the exact service to which the http request will be made. <br>
-            Possible values are: <br>
-            <i><strong>/testPath<br>/path3<br>/path1/{testPath}<br>/path2?param2=' + httpOptions.query.param2 + '&param3=' + httpOptions.query.param3 + '<br>/path4<br></strong></i>
-        </td>
-    </tr>
-    <tr>
-        <td>Headers</td>
-        <td>keyValue</td>
-        <td>no</td>
-        <td> - </td>
-        <td>Always</td>
-        <td>
-            Used when you want to have a custom http header for the request.
-        </td>
-    </tr>
-    <tr>
-        <td>Query Params</td>
-        <td>keyValue</td>
-        <td>no</td>
-        <td> - </td>
-        <td>Always</td>
-        <td>
-            Used when you want to have a custom query params for the http call.
-        </td>
-    </tr>
-    <tr>
-        <td>Body</td>
-        <td>json</td>
-        <td>no</td>
-        <td> - </td>
-        <td>Always</td>
-        <td>
-            A payload of data can be sent to the server in the body of the request.
-        </td>
-    </tr>
-    <tr>
-        <td>Override Settings</td>
-        <td>boolean</td>
-        <td>no</td>
-        <td> false </td>
-        <td>Always</td>
-        <td></td>
-    </tr>
-    <tr>
-        <td>Follow Redirect</td>
-        <td>boolean</td>
-        <td>no</td>
-        <td> false </td>
-        <td> overrideSettings </td>
-        <td>It Indicates that the resource has to be downloaded into a file instead of returning it in the response.</td>
-    </tr>
-    <tr>
-        <td>Download</td>
-        <td>boolean</td>
-        <td>no</td>
-        <td> false </td>
-        <td> overrideSettings </td>
-        <td>If true, the method won't return until the file has been downloaded, and it will return all the information of the file.</td>
-    </tr>
-    <tr>
-        <td>File name</td>
-        <td>text</td>
-        <td>no</td>
-        <td></td>
-        <td> overrideSettings </td>
-        <td>If provided, the file will be stored with this name. If empty, the file name will be calculated from the URL.</td>
-    </tr>
-    <tr>
-        <td>Full response</td>
-        <td> boolean </td>
-        <td>no</td>
-        <td> false </td>
-        <td> overrideSettings </td>
-        <td>Includes extended information about response</td>
-    </tr>
-    <tr>
-        <td>Connection Timeout</td>
-        <td> number </td>
-        <td>no</td>
-        <td> 5000 </td>
-        <td> overrideSettings </td>
-        <td>Connect a timeout interval in milliseconds (0 = infinity).</td>
-    </tr>
-    <tr>
-        <td>Read Timeout</td>
-        <td> number </td>
-        <td>no</td>
-        <td> 60000 </td>
-        <td> overrideSettings </td>
-        <td>Read a timeout interval in milliseconds (0 = infinity).</td>
-    </tr>
-    </tbody>
-</table>
+---
+* Get configuration
+```javascript
+pkg.metamask.functions.getConfigMetamask();
+```
+Returns the configuration of MetaMask.
+This is useful if you want to check configured accounts or the network MetaMask is currently configured to.
+It supports the following callback:
 
-<h3>Outputs</h3>
-
-<table>
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>response</td>
-        <td>object</td>
-        <td>
-            Object resulting from the response to the package call.
-        </td>
-    </tr>
-    </tbody>
-</table>
-
+- response: the config is sent in the `res` parameter. This parameter has the following structure:
+```json
+{
+  "netId": 1, 
+  "defaultAccount": "0x1...", 
+  "accounts": ["0x1...", "0x2..."]
+}
+```
+---
 
 </details>
 
-For more information about how shortcuts or flow steps work, and how they are generated, take a look at the [slingr-helpgen tool](https://github.com/slingr-stack/slingr-helpgen).
+## UI Service
 
-## Dependencies
-* HTTP Service (v1.3.7)
-* Oauth Package (v1.0.19) // TODO review and remove if its needed
+The Metamask package user a UI service to handle the request.
+<details>
+    <summary>Click here to see the UI Service</summary>
 
-## About SLINGR
+<br>
+
+### OAuth UI Service
+
+The MetaMask UI Service uses npm dependency of ethereum (MetaMask 4.16.0+)
+
+</details>
+
+# About SLINGR
 
 SLINGR is a low-code rapid application development platform that accelerates development, with robust architecture for integrations and executing custom workflows and automation.
 
 [More info about SLINGR](https://slingr.io)
 
-## License
+# License
 
 This package is licensed under the Apache License 2.0. See the `LICENSE` file for more details.

@@ -1,0 +1,42 @@
+{
+  "name": "metaMask",
+  "label": {
+    "translation": {
+      "en": "MetaMask"
+    }
+  },
+  "places": [
+    "APP"
+  ],
+  "dependencies": [],
+  "byGroups": false,
+  "functions": [
+    {
+      "label": "Process message",
+      "name": "processMessage",
+      "callbacks": [
+        "approved",
+        "declined",
+        "response",
+        "error"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "label": "Send transaction",
+      "name": "sendTransaction",
+      "callbacks": ["approved", "declined", "error"]
+    },
+    {
+      "label": "Sign data",
+      "name": "signData",
+      "callbacks": ["approved", "declined", "error"]
+    },
+    {
+      "label": "Get config metamask",
+      "name": "getConfigMetamask",
+      "callbacks": ["response"]
+    }
+  ]
+}

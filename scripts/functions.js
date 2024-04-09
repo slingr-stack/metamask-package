@@ -3,7 +3,7 @@
  ****************************************************/
 
 exports.sendTransaction = function (netId, dataFrom, from) {
-    let response = {id: uuid()+"MetaMask-sendTransaction"};
+    const id = randomString()+"MetaMask-sendTransaction";
     sys.logs.info('[metamask] Sending transaction to MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -22,9 +22,10 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     txHash: callbackData.txHash,
                     originalMessage: originalMessage
                 });
-                response = {
-                    tx: callbackData.tx,
-                    txHash: callbackData.txHash,
+                let response = {
+                    id: id,
+                    tx: callbackData.data.tx,
+                    txHash: callbackData.data.txHash,
                 };
                 sys.storage.put(response.id +'MetaMask-sendTransaction', response);
             },
@@ -35,9 +36,10 @@ exports.sendTransaction = function (netId, dataFrom, from) {
                     error: callbackData.error,
                     originalMessage: originalMessage
                 });
-                response.response = {
-                    tx: callbackData.tx,
-                    error: callbackData.error,
+                let response = {
+                    id: id,
+                    tx: callbackData.data.tx,
+                    error: callbackData.data.error,
                 };
                 sys.storage.put(response.id +'MetaMask-sendTransaction', response);
             },
@@ -48,11 +50,11 @@ exports.sendTransaction = function (netId, dataFrom, from) {
             }
         }
     });
-    return response;
+    return id;
 }
 
 exports.signData = function () {
-    let response = {id: uuid()+"MetaMask-signData"};
+    const id = randomString()+"MetaMask-signData";
     sys.logs.info('[metamask] Signing data with MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -66,9 +68,10 @@ exports.signData = function () {
                     signedData: callbackData.signedData,
                     originalMessage: originalMessage
                 });
-                response = {
+                let response = {
+                    id: id,
                     data: callbackData.data,
-                    signedData: callbackData.signedData,
+                    signedData: callbackData.data.signedData,
                 };
                 sys.storage.put(response.id +'MetaMask-signData', response);
             },
@@ -79,9 +82,10 @@ exports.signData = function () {
                     error: callbackData.error,
                     originalMessage: originalMessage
                 });
-                response = {
-                    tx: callbackData.tx,
-                    error: callbackData.error,
+                let response = {
+                    id: id,
+                    tx: callbackData.data.tx,
+                    error: callbackData.data.error,
                 };
                 sys.storage.put(response.id +'MetaMask-signData', response);
             },
@@ -92,11 +96,11 @@ exports.signData = function () {
             }
         }
     });
-    return response;
+    return id;
 }
 
 exports.getConfigMetamask = function () {
-    let response = {id: uuid()+"MetaMask-getConfigMetamask"};
+    const id = randomString()+"MetaMask-getConfigMetamask";
     sys.logs.info('[metamask] Requesting config from MetaMask');
     sys.ui.sendMessage({
         scope: 'uiService:metamask.metaMask',
@@ -105,34 +109,30 @@ exports.getConfigMetamask = function () {
         callbacks: {
             response: function (originalMessage, callbackData) {
                 sys.logs.info('[metamask] Get config from MetaMask: [' + JSON.stringify(callbackData) + ']');
-                response = {
-                    netId: callbackData.netId,
-                    defaultAccount: callbackData.defaultAccount,
-                    accounts: callbackData.accounts
+                let response = {
+                    id: id,
+                    netId: callbackData.data.netId,
+                    defaultAccount: callbackData.data.defaultAccount,
+                    accounts: callbackData.data.accounts
                 };
                 sys.storage.put(response.id +'MetaMask-getConfigMetamask', response, {ttl: 60 * 60 * 1000});
             }
         }
     });
-    return response;
+    return id;
 }
 
 /****************************************************
  Private API
  ****************************************************/
 
-function uuid() {
-    var d = new Date().getTime();//Timestamp
-    var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now() * 1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16;//random number between 0 and 16
-        if (d > 0) {//Use timestamp until depleted
-            r = (d + r) % 16 | 0;
-            d = Math.floor(d / 16);
-        } else {//Use microseconds since page-load if supported
-            r = (d2 + r) % 16 | 0;
-            d2 = Math.floor(d2 / 16);
-        }
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
+function randomString(length) {
+    length = length || 10;
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }

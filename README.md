@@ -22,7 +22,9 @@ This package allows you to connect your SLINGR application to sign transactions 
 ## QuickStart
 
 ```js
-log(JSON.stringify(pkg.metamask.functions.getConfigMetamask()));
+let id = pkg.metamask.functions.getConfigMetamask();
+sys.utils.script.wait(15000);
+log(JSON.stringify(sys.storage.get(id)));
 ```
 
 # Javascript API

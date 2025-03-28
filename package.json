@@ -1,6 +1,6 @@
 {
     "name": "metamask",
-    "label": "MetaMask Package",
+    "label": "MetaMask",
     "dependencies": [],
     "configuration": [],
     "events": [

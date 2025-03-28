@@ -1,21 +1,7 @@
-<table class="table" style="margin-top: 10px">
-    <thead>
-    <tr>
-        <th>Title</th>
-        <th>Last Updated</th>
-        <th>Summary</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>Metamask package</td>
-        <td>April 9, 2024</td>
-        <td>Detailed description of the Metamask UI service.</td>
-    </tr>
-    </tbody>
-</table>
 
 # Overview
+
+Repo: [https://github.com/slingr-stack/metamask-package](https://github.com/slingr-stack/metamask-package)
 
 This package allows you to connect your SLINGR application to sign transactions using the MetaMask browser extension.
 
@@ -103,9 +89,9 @@ The MetaMask UI Service uses npm dependency of ethereum (MetaMask 4.16.0+)
 
 </details>
 
-# About SLINGR
+# About Slingr
 
-SLINGR is a low-code rapid application development platform that accelerates development, with robust architecture for integrations and executing custom workflows and automation.
+Slingr is a low-code rapid application development platform that accelerates development, with robust architecture for integrations and executing custom workflows and automation.
 
 [More info about SLINGR](https://slingr.io)
 
